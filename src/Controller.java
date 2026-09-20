@@ -1,7 +1,7 @@
 /**
  * Sebastian Yael Curiel Franco
- * CEN 3024C - Software Development I - 31032
- * June 16, 2026
+ * Software Development I - CEN 3024C - 13038
+ * September 19, 2026
  * Controller.java
  * This class handles all of the methods called by the Main.java class.
  * It contains an addPatron method to handle adding patrons manually or through a text file.
@@ -27,38 +27,54 @@ public class Controller
      */
     public void addPatron(int addOption)
     {
+        String id;
+        String name;
+        String address;
+        double fine;
+
         if (addOption == 1)
         {
-            while (true)
+            do
             {
                 System.out.print("\nEnter a Patron ID: ");
-                String id = scanner.nextLine();
+                id = scanner.nextLine();
+            }
+            while (!validateID(id));
 
-                System.out.print("Enter the Patron's Name: ");
-                String name = scanner.nextLine();
+            do
+            {
+                System.out.print("\nEnter the Patron's Name: ");
+                name = scanner.nextLine();
+            }
+            while (!validateName(name));
 
-                System.out.print("Enter the Patron's Address: ");
-                String address = scanner.nextLine();
+            do
+            {
+                System.out.print("\nEnter the Patron's Address: ");
+                address = scanner.nextLine();
+            }
+            while (!validateAddress(address));
 
-                System.out.print("Enter the Patron's Overdue Fine Amount: ");
+            do
+            {
+                System.out.print("\nEnter the Patron's Overdue Fine Amount: ");
+
                 while (!scanner.hasNextDouble())
                 {
                     System.out.print("Fine must be a number: ");
                     scanner.nextLine();
                 }
-                double fine = scanner.nextDouble();
+
+                fine = scanner.nextDouble();
                 scanner.nextLine();
-
-                if (validateID(id) && validateName(name) && validateAddress(address) && validateFine(fine))
-                {
-                    Patron patron = new Patron(id, name, address, fine);
-                    patrons.add(patron);
-
-                    System.out.println("");
-                    showPatrons();
-                    break;
-                }
             }
+            while (!validateFine(fine));
+
+            Patron patron = new Patron(id, name, address, fine);
+            patrons.add(patron);
+
+            System.out.println("");
+            showPatrons();
         }
         else if (addOption == 2)
         {
@@ -68,37 +84,51 @@ public class Controller
             try
             {
                 File file = new File(directory);
-                Scanner scanner = new Scanner(file);
+                Scanner fscanner = new Scanner(file);
+                int line = 0;
 
-                while (scanner.hasNextLine())
+                while (fscanner.hasNextLine())
                 {
-                    String data = scanner.nextLine();
+                    line++;
+
+                    String data = fscanner.nextLine();
                     String[] format = data.split("-");
 
                     if (format.length != 4)
                     {
                         System.out.println("\nInvalid Format (Must be ID-Name-Address-Fine)");
+                        System.out.println("Line " + line);
+                        System.out.println("");
                         continue;
                     }
 
-                    String id = format[0];
-                    String name = format[1];
-                    String address = format[2];
-                    double fine = Double.parseDouble(format[3]);
+                    id = format[0];
+                    name = format[1];
+                    address = format[2];
 
-                    if (validateID(id) && validateName(name) && validateAddress(address) && validateFine(fine))
+                    try
                     {
-                        Patron patron = new Patron(id, name, address, fine);
-                        patrons.add(patron);
+                        fine = Double.parseDouble(format[3]);
                     }
+                    catch (NumberFormatException e)
+                    {
+                        System.out.println("Line " + line + ": Fine must be a number.");
+                        System.out.println("");
+                        continue;
+                    }
+
+                    if (!validateID(id) || !validateName(name) || !validateAddress(address) || !validateFine(fine))
+                    {
+                        System.out.println("Line " + line);
+                        System.out.println("");
+                        continue;
+                    }
+
+                    Patron patron = new Patron(id, name, address, fine);
+                    patrons.add(patron);
                 }
 
                 showPatrons();
-            }
-            catch (NumberFormatException e)
-            {
-                System.out.println("\nInvalid File, check the file's contents.");
-                System.out.println("Make sure each Patron is in a valid format.");
             }
             catch (FileNotFoundException e)
             {
@@ -174,7 +204,7 @@ public class Controller
             if (patron.getId().equals(id))
             {
                 System.out.println("\nPatron ID is duplicate.");
-                System.out.println("Please re-assign this Patron ID to a valid seven digit number.");
+                System.out.println("Please re-assign the Patron ID to a valid seven digit number.");
                 return false;
             }
         }
@@ -183,7 +213,7 @@ public class Controller
         {
             if (!Character.isDigit(id.charAt(i)))
             {
-                System.out.println("\nA Patron ID must only use numbers.");
+                System.out.println("\nPatron ID must only use numbers.");
                 return false;
             }
         }
@@ -192,12 +222,12 @@ public class Controller
         {
             if (id.isBlank())
             {
-                System.out.println("\nThe Patron must have an ID number.");
+                System.out.println("\nPatron must have an ID number.");
                 return false;
             }
             else
             {
-                System.out.println("\nThe Patron ID must be seven digits long.");
+                System.out.println("\nPatron ID must be seven digits long.");
                 return false;
             }
         }
@@ -216,7 +246,7 @@ public class Controller
     {
         if (name.isBlank())
         {
-            System.out.println("\nThe Patron must have a namme.");
+            System.out.println("\nPatron must have a name.");
             return false;
         }
 
@@ -234,7 +264,7 @@ public class Controller
     {
         if (address.isBlank())
         {
-            System.out.println("\nThe Patron must have an address.");
+            System.out.println("\nPatron must have an address.");
             return false;
         }
 
@@ -276,7 +306,7 @@ public class Controller
             }
         }
 
-        System.out.println("\nThis Patron ID does not exist.");
+        System.out.println("\nPatron ID does not exist.");
         return false;
     }
 }

@@ -1,7 +1,7 @@
 /**
- * Sebastian Yael Curiel Francoy
- * CEN 3024C - Software Development I - 31032
- * June 16, 2026
+ * Sebastian Yael Curiel Franco
+ * Software Development I - CEN 3024C - 13038
+ * September 19, 2026
  * Main.java
  * This application asks the user to select an option
  * to either add, remove, or display Patron information.
@@ -48,7 +48,7 @@ public class Main
                 {
                     case 1:
 
-                        System.out.println("\nHow would you like to add a Patron?");
+                        System.out.println("\n- How would you like to add a Patron? -\n");
                         System.out.println("1. Manual");
                         System.out.println("2. Text File");
                         System.out.println("");

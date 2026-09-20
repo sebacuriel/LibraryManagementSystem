@@ -1,7 +1,7 @@
 /**
  * Sebastian Yael Curiel Franco
- * CEN 3024C - Software Development I - 31032
- * June 16, 2026
+ * Software Development I - CEN 3024C - 13038
+ * September 19, 2026
  * Patron.java
  * This class defines a Patron object with an id, name, address,
  * and fine, and handles how the information is output.
